@@ -1,4 +1,4 @@
-import * as images from '../images/**/*.png';
+import * as images from "../images/**/*.png";
 
 console.log(images);
 
@@ -6,13 +6,13 @@ console.log(images);
   var mk = {};
 
   mk.callbacks = {
-    ATTACK: 'attack',
-    GAME_END: 'game-end'
+    ATTACK: "attack",
+    GAME_END: "game-end"
   };
 
   mk.config = {
-    ARENAS: 'arenas',
-    FIGHTERS: 'fighters',
+    ARENAS: "arenas",
+    FIGHTERS: "fighters",
     STEP_DURATION: 80,
     PLAYER_TOP: 230,
     BLOCK_DAMAGE: 0.2
@@ -40,7 +40,7 @@ console.log(images);
 
   mk.reset = function() {
     var game = this.game;
-    if (typeof game.reset === 'function') game.reset();
+    if (typeof game.reset === "function") game.reset();
     game.fighters.forEach(function(f) {
       f.getMove().stop();
     });
@@ -61,7 +61,10 @@ console.log(images);
         new mk.fighters.Fighter({
           name: fighters[i].name,
           arena: this.arena,
-          orientation: i === 0 ? mk.fighters.orientations.LEFT : mk.fighters.orientations.RIGHT,
+          orientation:
+            i === 0
+              ? mk.fighters.orientations.LEFT
+              : mk.fighters.orientations.RIGHT,
           game: this
         })
       );
@@ -93,7 +96,7 @@ console.log(images);
   };
 
   mk.controllers.Base.prototype._initialize = function() {
-    throw '_initialize is not implemented for this controller!';
+    throw "_initialize is not implemented for this controller!";
   };
 
   mk.controllers.Base.prototype._setFighersArena = function() {
@@ -114,13 +117,21 @@ console.log(images);
       this._attackCompatible(fighter.getMove().type, opponent.getMove().type)
     ) {
       opponent.endureAttack(damage, fighter.getMove().type);
-      if (typeof callback === 'function') {
-        callback.call(null, fighter, opponent, opponentLife - opponent.getLife());
+      if (typeof callback === "function") {
+        callback.call(
+          null,
+          fighter,
+          opponent,
+          opponentLife - opponent.getLife()
+        );
       }
     }
   };
 
-  mk.controllers.Base.prototype._attackCompatible = function(attack, opponentStand) {
+  mk.controllers.Base.prototype._attackCompatible = function(
+    attack,
+    opponentStand
+  ) {
     var m = mk.moves.types;
     if (opponentStand === m.SQUAT) {
       if (attack !== m.LOW_PUNCH && attack !== m.LOW_KICK) {
@@ -138,7 +149,10 @@ console.log(images);
    * @param {Fighter} opponent The fighter who will endure the attack
    * @return {boolean} true/false depending on the distance between the fighters
    */
-  mk.controllers.Base.prototype._requiredDistance = function(attacker, opponent) {
+  mk.controllers.Base.prototype._requiredDistance = function(
+    attacker,
+    opponent
+  ) {
     var fMiddle = attacker.getX() + attacker.getWidth() / 2,
       oMiddle = opponent.getX() + opponent.getWidth() / 2,
       distance = Math.abs(fMiddle - oMiddle),
@@ -168,7 +182,7 @@ console.log(images);
       callback = this._callbacks[mk.callbacks.GAME_END];
     opponent.getMove().stop();
     opponent.setMove(mk.moves.types.WIN);
-    if (typeof callback === 'function') {
+    if (typeof callback === "function") {
       callback.call(null, fighter);
     }
   };
@@ -201,7 +215,7 @@ console.log(images);
       self = this,
       f = this.fighters[this._player];
     document.addEventListener(
-      'keydown',
+      "keydown",
       function(e) {
         pressed[e.keyCode] = true;
         var move = self._getMove(pressed, mk.controllers.keys, self._player);
@@ -210,7 +224,7 @@ console.log(images);
       false
     );
     document.addEventListener(
-      'keyup',
+      "keyup",
       function(e) {
         delete pressed[e.keyCode];
         var move = self._getMove(pressed, mk.controllers.keys, self._player);
@@ -369,7 +383,7 @@ console.log(images);
       f2 = this.fighters[1];
 
     document.addEventListener(
-      'keydown',
+      "keydown",
       function(e) {
         pressed[e.keyCode] = true;
         var move = self._getMove(pressed, mk.controllers.keys.p1, 0);
@@ -381,7 +395,7 @@ console.log(images);
     );
 
     document.addEventListener(
-      'keyup',
+      "keyup",
       function(e) {
         delete pressed[e.keyCode];
         var move = self._getMove(pressed, mk.controllers.keys.p1, 0);
@@ -406,13 +420,13 @@ console.log(images);
     this._transport = options.transport || this.Transports.socketio;
   };
 
-  mk.callbacks.PLAYER_CONNECTED = 'player-connected';
+  mk.callbacks.PLAYER_CONNECTED = "player-connected";
 
   mk.controllers.Network.prototype = new mk.controllers.Basic();
 
   mk.controllers.Network.prototype.Requests = {
-    CREATE_GAME: 'create-game',
-    JOIN_GAME: 'join-game'
+    CREATE_GAME: "create-game",
+    JOIN_GAME: "join-game"
   };
 
   mk.controllers.Network.prototype.Responses = {
@@ -423,10 +437,10 @@ console.log(images);
   };
 
   mk.controllers.Network.prototype.Messages = {
-    EVENT: 'event',
-    LIFE_UPDATE: 'life-update',
-    POSITION_UPDATE: 'position-update',
-    PLAYER_CONNECTED: 'player-connected'
+    EVENT: "event",
+    LIFE_UPDATE: "life-update",
+    POSITION_UPDATE: "position-update",
+    PLAYER_CONNECTED: "player-connected"
   };
 
   mk.controllers.Network.prototype.Transports = {
@@ -479,7 +493,7 @@ console.log(images);
     if (this._isHost) {
       this._transport.on(this.Messages.PLAYER_CONNECTED, function(data) {
         var c = self._callbacks[mk.callbacks.PLAYER_CONNECTED];
-        if (typeof c === 'function') {
+        if (typeof c === "function") {
           c();
         }
       });
@@ -488,7 +502,7 @@ console.log(images);
 
   mk.controllers.Network.prototype._moveFighter = function(f, m) {
     if (m) {
-      this._transport.emit('event', m);
+      this._transport.emit("event", m);
       f.setMove(m);
     }
   };
@@ -506,39 +520,61 @@ console.log(images);
       this._player = 0;
     }
     this._addHandlers();
+    // this._addMovementHandlers();
     this._transport.init();
-    this._transport.on('connect', function() {
+    this._transport.on("connect", function() {
       if (self._isHost) {
         self._createGame(self._gameName);
       } else {
         self._joinGame(self._gameName);
       }
     });
-    this._transport.on('response', function(response) {
+    this._transport.on("response", function(response) {
       if (response !== self.Responses.SUCCESS) {
-        alert('Error while connecting to the server.');
+        alert("Error while connecting to the server.");
       }
     });
-    this._transport.on('disconnect', function() {
-      alert('Disconnected from the server.');
+    this._transport.on("disconnect", function() {
+      alert("Disconnected from the server.");
     });
   };
 
+  mk.controllers.Network.prototype._addMovementHandlers = function() {
+    var f;
+    var self = this;
+    if (this._isHost) {
+      // this._player = 1;
+      f = this.fighters[1];
+    } else {
+      f = this.fighters[0];
+    }
+    window.Detect = window.Detect || {};
+    window.Detect.onPunch = function() {
+      f.setMove(mk.moves.types.HIGH_PUNCH);
+    };
+    window.Detect.onKick = function() {
+      f.setMove(mk.moves.types.LOW_KICK);
+    };
+    window.Detect.onStand = function() {
+      f.setMove(mk.moves.types.STAND);
+    };
+  };
+
   mk.start = function(options) {
-    var type = options.gameType || 'basic';
+    var type = options.gameType || "basic";
     var promise = new mk.Promise();
     type = type.toLowerCase();
     switch (type) {
-      case 'basic':
+      case "basic":
         mk.game = new mk.controllers.Basic(options);
         break;
-      case 'network':
+      case "network":
         mk.game = new mk.controllers.Network(options);
         break;
-      case 'multiplayer':
+      case "multiplayer":
         mk.game = new mk.controllers.Multiplayer(options);
         break;
-      case 'webcaminput':
+      case "webcaminput":
         mk.game = new mk.controllers.WebcamInput(options);
         break;
       default:
@@ -554,7 +590,7 @@ console.log(images);
 
   mk.Promise.prototype._initialized = function() {
     this.callbacks.forEach(function(c) {
-      if (typeof c === 'function') {
+      if (typeof c === "function") {
         c();
       }
     });
@@ -581,11 +617,11 @@ console.log(images);
   };
 
   mk.arenas.Arena.prototype.init = function() {
-    var canvas = document.createElement('canvas');
+    var canvas = document.createElement("canvas");
     canvas.width = this.width;
     canvas.height = this.height;
     this._container.appendChild(canvas);
-    this._context = canvas.getContext('2d');
+    this._context = canvas.getContext("2d");
     this._canvas = canvas;
     this.refresh();
   };
@@ -601,7 +637,7 @@ console.log(images);
   };
 
   mk.arenas.Arena.prototype._drawArena = function() {
-    var img = document.createElement('img'),
+    var img = document.createElement("img"),
       conf = mk.config,
       self = this;
     if (this.texture) {
@@ -654,7 +690,11 @@ console.log(images);
     return pos;
   };
 
-  mk.arenas.Arena.prototype._synchronizeFighters = function(pos, fighter, opponent) {
+  mk.arenas.Arena.prototype._synchronizeFighters = function(
+    pos,
+    fighter,
+    opponent
+  ) {
     if (
       fighter.getMove().type === mk.moves.types.FORWARD_JUMP ||
       fighter.getMove().type === mk.moves.types.BACKWARD_JUMP
@@ -665,7 +705,10 @@ console.log(images);
     let diff;
     if (fighter.getOrientation() === mk.fighters.orientations.LEFT) {
       diff = Math.min(
-        this.width - (opponent.getX() + opponent.getVisibleWidth() + fighter.getVisibleWidth()),
+        this.width -
+          (opponent.getX() +
+            opponent.getVisibleWidth() +
+            fighter.getVisibleWidth()),
         pos.x - fighter.getX()
       );
 
@@ -706,34 +749,34 @@ console.log(images);
   mk.moves = {};
 
   mk.moves.types = {
-    STAND: 'stand',
-    WALK: 'walking',
-    WALK_BACKWARD: 'walking-backward',
-    SQUAT: 'squating',
-    STAND_UP: 'stand-up',
-    HIGH_KICK: 'high-kick',
-    JUMP: 'jumping',
-    FORWARD_JUMP: 'forward-jump',
-    BACKWARD_JUMP: 'backward-jump',
-    LOW_KICK: 'low-kick',
-    LOW_PUNCH: 'low-punch',
-    HIGH_PUNCH: 'high-punch',
-    FALL: 'fall',
-    WIN: 'win',
-    ENDURE: 'endure',
-    SQUAT_ENDURE: 'squat-endure',
-    UPPERCUT: 'uppercut',
-    SQUAT_LOW_KICK: 'squat-low-kick',
-    SQUAT_HIGH_KICK: 'squat-high-kick',
-    SQUAT_LOW_PUNCH: 'squat-low-punch',
-    KNOCK_DOWN: 'knock-down',
-    ATTRACTIVE_STAND_UP: 'attractive-stand-up',
-    SPIN_KICK: 'spin-kick',
-    BLOCK: 'blocking',
-    FORWARD_JUMP_KICK: 'forward-jump-kick',
-    BACKWARD_JUMP_KICK: 'backward-jump-kick',
-    BACKWARD_JUMP_PUNCH: 'backward-jump-punch',
-    FORWARD_JUMP_PUNCH: 'forward-jump-punch'
+    STAND: "stand",
+    WALK: "walking",
+    WALK_BACKWARD: "walking-backward",
+    SQUAT: "squating",
+    STAND_UP: "stand-up",
+    HIGH_KICK: "high-kick",
+    JUMP: "jumping",
+    FORWARD_JUMP: "forward-jump",
+    BACKWARD_JUMP: "backward-jump",
+    LOW_KICK: "low-kick",
+    LOW_PUNCH: "low-punch",
+    HIGH_PUNCH: "high-punch",
+    FALL: "fall",
+    WIN: "win",
+    ENDURE: "endure",
+    SQUAT_ENDURE: "squat-endure",
+    UPPERCUT: "uppercut",
+    SQUAT_LOW_KICK: "squat-low-kick",
+    SQUAT_HIGH_KICK: "squat-high-kick",
+    SQUAT_LOW_PUNCH: "squat-low-punch",
+    KNOCK_DOWN: "knock-down",
+    ATTRACTIVE_STAND_UP: "attractive-stand-up",
+    SPIN_KICK: "spin-kick",
+    BLOCK: "blocking",
+    FORWARD_JUMP_KICK: "forward-jump-kick",
+    BACKWARD_JUMP_KICK: "backward-jump-kick",
+    BACKWARD_JUMP_PUNCH: "backward-jump-punch",
+    FORWARD_JUMP_PUNCH: "forward-jump-punch"
   };
 
   /**
@@ -755,7 +798,7 @@ console.log(images);
 
   mk.moves.Move.prototype.go = function(step) {
     var self = this;
-    if (typeof this._beforeGo === 'function') this._beforeGo();
+    if (typeof this._beforeGo === "function") this._beforeGo();
     this._currentStep = step || 0;
     this._nextStep(this._action);
     this._interval = setInterval(function() {
@@ -766,7 +809,7 @@ console.log(images);
   mk.moves.Move.prototype._action = function() {};
 
   mk.moves.Move.prototype._nextStep = function(callback) {
-    var img = document.createElement('img'),
+    var img = document.createElement("img"),
       conf = mk.config;
 
     img = this._steps[this.owner.getOrientation()][this._currentStep];
@@ -786,7 +829,7 @@ console.log(images);
     this._steps[o.LEFT] = [];
     for (let i = 0; i < this._totalSteps; i += 1) {
       for (const orientation in o) {
-        img = document.createElement('img');
+        img = document.createElement("img");
         img.onload = function() {
           loaded += 1;
           if (loaded === self._totalSteps * 2) {
@@ -797,22 +840,24 @@ console.log(images);
         this._steps[o[orientation]].push(img);
       }
     }
-    if (typeof this.addHandlers === 'function') {
+    if (typeof this.addHandlers === "function") {
       this.addHandlers();
     }
   };
 
   mk.moves.Move.prototype._getImageUrl = function(id, ownerOrientation) {
     var conf = mk.config;
-    return images[conf.FIGHTERS][this.owner.getName()][ownerOrientation][this.type][id];
+    return images[conf.FIGHTERS][this.owner.getName()][ownerOrientation][
+      this.type
+    ][id];
   };
 
   mk.moves.Move.prototype.stop = function(callback) {
-    if (typeof this._beforeStop === 'function') this._beforeStop();
+    if (typeof this._beforeStop === "function") this._beforeStop();
 
     clearInterval(this._interval);
 
-    if (typeof this._actionPending === 'function') {
+    if (typeof this._actionPending === "function") {
       var func = this._actionPending;
       this._actionPending = null;
       func();
@@ -985,7 +1030,12 @@ console.log(images);
   };
 
   mk.moves.AttractiveStandUp = function(owner) {
-    mk.moves.FiniteMove.call(this, owner, mk.moves.types.ATTRACTIVE_STAND_UP, 100);
+    mk.moves.FiniteMove.call(
+      this,
+      owner,
+      mk.moves.types.ATTRACTIVE_STAND_UP,
+      100
+    );
     this._totalSteps = 4;
   };
 
@@ -1237,7 +1287,12 @@ console.log(images);
 
   mk.moves.Attack = function(options) {
     options = options || {};
-    mk.moves.Move.call(this, options.owner, options.type, options.duration || 40);
+    mk.moves.Move.call(
+      this,
+      options.owner,
+      options.type,
+      options.duration || 40
+    );
     this._damage = options.damage;
     this._totalSteps = options.steps;
     this._moveBack = false;
@@ -1272,7 +1327,10 @@ console.log(images);
 
   mk.moves.Attack.prototype._action = function() {
     this.keepDistance();
-    if (!this._hitPassed && this._currentStep === Math.round(this._totalSteps / 2)) {
+    if (
+      !this._hitPassed &&
+      this._currentStep === Math.round(this._totalSteps / 2)
+    ) {
       this.owner.attack(this.getDamage());
       this._hitPassed = true;
     }
@@ -1366,7 +1424,10 @@ console.log(images);
 
   mk.moves.Uppercut.prototype._action = function() {
     this.keepDistance();
-    if (!this._hitPassed && this._currentStep === Math.round(this._totalSteps / 2)) {
+    if (
+      !this._hitPassed &&
+      this._currentStep === Math.round(this._totalSteps / 2)
+    ) {
       this.owner.attack(this.getDamage());
       this._hitPassed = true;
     }
@@ -1511,17 +1572,20 @@ console.log(images);
   mk.fighters.list = {
     subzero: true,
     kano: true
+    // kanishka: true,
+    // momo: true,
+    // five: true
   };
 
   mk.fighters.orientations = {
-    LEFT: 'left',
-    RIGHT: 'right'
+    LEFT: "left",
+    RIGHT: "right"
   };
 
   mk.fighters.Fighter = function(options) {
     var name = options.name.toLowerCase();
     if (!mk.fighters.list[name]) {
-      throw 'Invalid fighter name!';
+      throw "Invalid fighter name!";
     }
     this._name = name;
     this._arena = options.arena;
@@ -1546,7 +1610,9 @@ console.log(images);
     this.moves[mk.moves.types.SQUAT] = new mk.moves.Squat(this);
     this.moves[mk.moves.types.BLOCK] = new mk.moves.Block(this);
     this.moves[mk.moves.types.STAND_UP] = new mk.moves.StandUp(this);
-    this.moves[mk.moves.types.ATTRACTIVE_STAND_UP] = new mk.moves.AttractiveStandUp(this);
+    this.moves[
+      mk.moves.types.ATTRACTIVE_STAND_UP
+    ] = new mk.moves.AttractiveStandUp(this);
     this.moves[mk.moves.types.HIGH_KICK] = new mk.moves.HighKick(this);
     this.moves[mk.moves.types.LOW_KICK] = new mk.moves.LowKick(this);
     this.moves[mk.moves.types.SPIN_KICK] = new mk.moves.SpinKick(this);
@@ -1554,16 +1620,32 @@ console.log(images);
     this.moves[mk.moves.types.HIGH_PUNCH] = new mk.moves.HighPunch(this);
     this.moves[mk.moves.types.UPPERCUT] = new mk.moves.Uppercut(this);
     this.moves[mk.moves.types.SQUAT_LOW_KICK] = new mk.moves.SquatLowKick(this);
-    this.moves[mk.moves.types.SQUAT_HIGH_KICK] = new mk.moves.SquatHighKick(this);
-    this.moves[mk.moves.types.SQUAT_LOW_PUNCH] = new mk.moves.SquatLowPunch(this);
+    this.moves[mk.moves.types.SQUAT_HIGH_KICK] = new mk.moves.SquatHighKick(
+      this
+    );
+    this.moves[mk.moves.types.SQUAT_LOW_PUNCH] = new mk.moves.SquatLowPunch(
+      this
+    );
     this.moves[mk.moves.types.FALL] = new mk.moves.Fall(this);
     this.moves[mk.moves.types.KNOCK_DOWN] = new mk.moves.KnockDown(this);
     this.moves[mk.moves.types.WIN] = new mk.moves.Win(this);
     this.moves[mk.moves.types.JUMP] = new mk.moves.Jump(this);
-    this.moves[mk.moves.types.FORWARD_JUMP_KICK] = new mk.moves.JumpKick(this, true);
-    this.moves[mk.moves.types.BACKWARD_JUMP_KICK] = new mk.moves.JumpKick(this, false);
-    this.moves[mk.moves.types.FORWARD_JUMP_PUNCH] = new mk.moves.JumpPunch(this, true);
-    this.moves[mk.moves.types.BACKWARD_JUMP_PUNCH] = new mk.moves.JumpPunch(this, false);
+    this.moves[mk.moves.types.FORWARD_JUMP_KICK] = new mk.moves.JumpKick(
+      this,
+      true
+    );
+    this.moves[mk.moves.types.BACKWARD_JUMP_KICK] = new mk.moves.JumpKick(
+      this,
+      false
+    );
+    this.moves[mk.moves.types.FORWARD_JUMP_PUNCH] = new mk.moves.JumpPunch(
+      this,
+      true
+    );
+    this.moves[mk.moves.types.BACKWARD_JUMP_PUNCH] = new mk.moves.JumpPunch(
+      this,
+      false
+    );
     this.moves[mk.moves.types.ENDURE] = new mk.moves.Endure(this);
     this.moves[mk.moves.types.SQUAT_ENDURE] = new mk.moves.SquatEndure(this);
     this.moves[mk.moves.types.FORWARD_JUMP] = new mk.moves.ForwardJump(this);
@@ -1576,7 +1658,7 @@ console.log(images);
       this.moves[move].init(function() {
         initialized += 1;
         if (initialized === total) {
-          if (typeof callback === 'function') {
+          if (typeof callback === "function") {
             callback();
           }
         }
@@ -1649,7 +1731,7 @@ console.log(images);
   };
 
   mk.fighters.Fighter.prototype.refresh = function() {
-    if (this._arena && typeof this._arena.refresh === 'function') {
+    if (this._arena && typeof this._arena.refresh === "function") {
       this._arena.refresh(this);
     }
   };
@@ -1671,7 +1753,10 @@ console.log(images);
   };
 
   mk.fighters.Fighter.prototype.setX = function(x) {
-    this._position.x = this._arena.moveFighter(this, { x: x, y: this.getY() }).x;
+    this._position.x = this._arena.moveFighter(this, {
+      x: x,
+      y: this.getY()
+    }).x;
   };
 
   mk.fighters.Fighter.prototype.setY = function(y) {
@@ -1734,7 +1819,8 @@ console.log(images);
     var m = mk.moves.types,
       currentMove = this._currentMove;
 
-    if (!(move in this.moves)) throw 'This player does not has the move - ' + move;
+    if (!(move in this.moves))
+      throw "This player does not has the move - " + move;
 
     if (this._currentMove && this._currentMove.type === move) return;
 
@@ -1748,13 +1834,15 @@ console.log(images);
         this._currentMove.stop();
         this.unlock();
         this._currentMove = this.moves[move];
-        this._currentMove._totalSteps = currentMove._totalSteps - currentMove._currentStep;
+        this._currentMove._totalSteps =
+          currentMove._totalSteps - currentMove._currentStep;
       }
     }
 
     if (this._locked && move !== m.WIN) return;
 
-    if (this._currentMove && typeof this._currentMove.stop === 'function') this._currentMove.stop();
+    if (this._currentMove && typeof this._currentMove.stop === "function")
+      this._currentMove.stop();
 
     this._currentMove = this.moves[move];
     this._currentMove.go(step);

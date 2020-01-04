@@ -56,7 +56,9 @@
         </tr>
     </tbody>
     <div class="manual">
+
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.4/socket.io.min.js"></script>
     <script src="mk/game/src/mk.js"></script>
     <script src="model.ts"></script>
     <script>
@@ -90,7 +92,7 @@
           fighters: [{ name: 'Subzero' }, { name: 'Kano' }],
           callbacks: {
             attack: function (f, o, l) {
-              if (o.getName() === 'kano') {
+              if (o.getName() === 'Kano') {
                 setLife($('player2Life'), o.getLife());
               } else {
                 setLife($('player1Life'), o.getLife());
@@ -98,7 +100,10 @@
             }
 
           },
-          gameType: 'webcaminput'
+          // gameType: 'webcaminput'
+          isHost: /^yes$/i.test(prompt('Are you going to be host?')),
+          gameName: prompt('Enter game name:'),
+          gameType: 'network'
         };
 
         function startNewGame() {
