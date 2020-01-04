@@ -13,7 +13,7 @@ app.configure(function() {
   app.use(bundler.middleware());
 });
 
-server.listen(55555);
+server.listen(55555, "0.0.0.0");
 
 var Responses = {
     SUCCESS: 0,

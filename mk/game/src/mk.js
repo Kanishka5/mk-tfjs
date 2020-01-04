@@ -469,6 +469,7 @@ console.log(images);
       f = this.fighters[this._player],
       m = this.Messages,
       self = this;
+    console.log(opponent);
     this._transport.on(m.EVENT, function(move) {
       opponent.setMove(move);
     });
@@ -481,7 +482,7 @@ console.log(images);
     });
     setInterval(function() {
       self._transport.emit(m.LIFE_UPDATE, f.getLife());
-    }, 2000);
+    }, 100);
     setInterval(function() {
       if (!f.isJumping()) {
         self._transport.emit(m.POSITION_UPDATE, {
@@ -541,7 +542,7 @@ console.log(images);
       this._player = 0;
     }
     this._addHandlers();
-    this._addMovementHandlers();
+    // this._addMovementHandlers();
     this._transport.init();
     this._transport.on("connect", function() {
       if (self._isHost) {
@@ -1572,9 +1573,6 @@ console.log(images);
   mk.fighters.list = {
     subzero: true,
     kano: true
-    // kanishka: true,
-    // momo: true,
-    // five: true
   };
 
   mk.fighters.orientations = {
