@@ -112,6 +112,8 @@ console.log(images);
     var opponent = this.getOpponent(fighter),
       opponentLife = opponent.getLife(),
       callback = this._callbacks[mk.callbacks.ATTACK];
+
+    console.log("oppoent is: ", opponent);
     if (
       this._requiredDistance(fighter, opponent) &&
       this._attackCompatible(fighter.getMove().type, opponent.getMove().type)
@@ -469,11 +471,12 @@ console.log(images);
       f = this.fighters[this._player],
       m = this.Messages,
       self = this;
-    console.log(opponent);
+    console.log("thisis opponent", opponent);
     this._transport.on(m.EVENT, function(move) {
       opponent.setMove(move);
     });
     this._transport.on(m.LIFE_UPDATE, function(data) {
+      console.log(data);
       opponent.setLife(data);
     });
     this._transport.on(m.POSITION_UPDATE, function(data) {
