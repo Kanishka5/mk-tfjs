@@ -471,12 +471,10 @@ console.log(images);
       f = this.fighters[this._player],
       m = this.Messages,
       self = this;
-    console.log("thisis opponent", opponent);
     this._transport.on(m.EVENT, function(move) {
       opponent.setMove(move);
     });
     this._transport.on(m.LIFE_UPDATE, function(data) {
-      console.log(data);
       opponent.setLife(data);
     });
     this._transport.on(m.POSITION_UPDATE, function(data) {
@@ -485,7 +483,7 @@ console.log(images);
     });
     setInterval(function() {
       self._transport.emit(m.LIFE_UPDATE, f.getLife());
-    }, 100);
+    }, 500);
     setInterval(function() {
       if (!f.isJumping()) {
         self._transport.emit(m.POSITION_UPDATE, {
@@ -1597,7 +1595,7 @@ console.log(images);
     this._height = 60;
     this._locked = false;
     this._position = {
-      x: 260,
+      x: 50,
       y: mk.config.PLAYER_TOP
     };
     this.init();

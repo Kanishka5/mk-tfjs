@@ -92,12 +92,9 @@
           fighters: [{ name: 'Subzero' }, { name: 'Kano' }],
           callbacks: {
             attack: function (f, o, l) {
-              console.log('this is the name',o.getName())
-              if (o.getName() === 'subzero') {
-                console.log('subzero');
+              if (o.getName() === 'kano') {
                 setLife($('player2Life'), o.getLife());
               } else {
-                console.log('kano')
                 setLife($('player1Life'), o.getLife());
               }
             }
