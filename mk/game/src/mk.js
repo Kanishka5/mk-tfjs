@@ -512,33 +512,6 @@ console.log(images);
     this._addSocketHandlers();
   };
 
-  mk.controllers.Network.prototype._initialize = function() {
-    var self = this;
-    if (this._isHost) {
-      this._player = 1;
-    } else {
-      this._player = 0;
-    }
-    this._addHandlers();
-    // this._addMovementHandlers();
-    this._transport.init();
-    this._transport.on("connect", function() {
-      if (self._isHost) {
-        self._createGame(self._gameName);
-      } else {
-        self._joinGame(self._gameName);
-      }
-    });
-    this._transport.on("response", function(response) {
-      if (response !== self.Responses.SUCCESS) {
-        alert("Error while connecting to the server.");
-      }
-    });
-    this._transport.on("disconnect", function() {
-      alert("Disconnected from the server.");
-    });
-  };
-
   mk.controllers.Network.prototype._addMovementHandlers = function() {
     var f;
     var self = this;
@@ -558,6 +531,33 @@ console.log(images);
     window.Detect.onStand = function() {
       f.setMove(mk.moves.types.STAND);
     };
+  };
+
+  mk.controllers.Network.prototype._initialize = function() {
+    var self = this;
+    if (this._isHost) {
+      this._player = 1;
+    } else {
+      this._player = 0;
+    }
+    this._addHandlers();
+    this._addMovementHandlers();
+    this._transport.init();
+    this._transport.on("connect", function() {
+      if (self._isHost) {
+        self._createGame(self._gameName);
+      } else {
+        self._joinGame(self._gameName);
+      }
+    });
+    this._transport.on("response", function(response) {
+      if (response !== self.Responses.SUCCESS) {
+        alert("Error while connecting to the server.");
+      }
+    });
+    this._transport.on("disconnect", function() {
+      alert("Disconnected from the server.");
+    });
   };
 
   mk.start = function(options) {
